@@ -10,6 +10,7 @@ use App\Charts\VentasGrafico;
 use App\Exports\VentasExport;
 use App\Productos;
 use App\Ventas;
+use App\Stock;
 use App\User;
 use DB;
 //use Mail; 
@@ -22,37 +23,69 @@ class VentasController extends Controller
 {
     public function ventas_vista($id)
     {
-        $producto = Productos::where('id', '=', $id)->get();
+        $producto = DB::table('maquinas')
+        ->join('stock', 'maquinas.id', '=', 'stock.maquina_id')
+        ->join('productos', 'productos.id', '=', 'stock.producto_id')
+        ->select('maquinas.*')
+        ->where('stock.producto_id', '=', $id)
+        ->get();
 
-        return view('Ventas/venta', [
-            'producto' => $producto[0]
+        return view('Maquinas/elegir', [
+            'maquinas'      => $producto,
+            'producto_id'   => $id
         ]);
     }
 
-    public function ventas($id, request $request)
+    public function elegir($maquina_id, $producto_id)
     {
-        $producto = Productos::where('id', '=', $id)->get();
+        $producto = DB::table('maquinas')
+        ->join('stock', 'maquinas.id', '=', 'stock.maquina_id')
+        ->join('productos', 'productos.id', '=', 'stock.producto_id')
+        ->select('productos.nombre AS nombre', 'productos.id', 'productos.precio')
+        ->where('stock.producto_id', '=', $producto_id)
+        ->where('stock.maquina_id', '=', $maquina_id)
+
+        ->get();
+
+        return view('Ventas/venta', [
+            'maquina_id'    => $maquina_id,
+            'producto_id'   => $producto_id,
+            'producto'      => $producto[0]
+        ]);
+    }
+
+    public function ventas($maquina_id, $producto_id, request $request)
+    {
+        $producto = Productos::where('id', '=', $producto_id)->get();
         $producto = $producto[0];
 
         $preciofinal = $request->input('cantidad') * $producto->precio;
         $maquina_id = $request->input('maquina_id');
-        
-        $venta = Ventas::create([
-            'producto_id'   => $producto->id,
-            'usuario_id'    => Auth::user()->id,
-            'maquina_id'    => 1,
-            'estado'        => 'R',
-            'costo'         => $preciofinal,
-            'cantidad'      => $request->input('cantidad')
-        ]);
+        $stock = DB::table('stock')
+            ->where('maquina_id','=', $maquina_id)
+            ->where('producto_id', '=', $producto_id)
+            ->get();
+        $stock = $stock[0];
 
+        if($stock->cantidad - $request->input('cantidad')<0){
+            $request->session()->flash('alert-danger', 'No hay existencia suficiente del producto!');
+            return redirect()->route('mostrar')->with('message','Danger');
+        }else{
+            $venta = Ventas::create([
+                'producto_id'   => $producto->id,
+                'usuario_id'    => Auth::user()->id,
+                'maquina_id'    => 1,
+                'estado'        => 'R',
+                'costo'         => $preciofinal,
+                'cantidad'      => $request->input('cantidad')
+            ]);
+        }
         
-
         $detalles = [
             'id'    => $venta->id,
             'title' => 'Granel',
-            'body'  => 'POR FIN',
-            'venta' => 'Estas aprobado bro',
+            'body'  => 'Su compra ha sido exitosa, verifique los datos:',
+            'datos' => "Producto: $producto->nombre, Precio total: $preciofinal, Cantidad: $venta->cantidad",
             'pdf'   =>  \PDF::loadView('email.qr',$venta)->save(storage_path('app/public/') .'archivo'.$venta->id.'.pdf')
         ];
        // cristianstanga@gmail.com
@@ -61,59 +94,20 @@ class VentasController extends Controller
 
         if(isset($venta->id))
         {
-            //$producto->stock = $producto->stock - $request->input('cantidad');
+            $stock->cantidad = $stock->cantidad - $request->input('cantidad');
             $producto->save();
         }
 
+        $request->session()->flash('alert-success', 'Su venta ha sido exitosa!');
         return redirect()->route('mostrar');
 
     }
 
-    public function ventasMaquina($id, request $request)
-    {
-        $producto = Productos::where('id', '=', $id)->get();
-        $producto = $producto[0];
-
-        $preciofinal = $request->input('cantidad') * $producto->precio;
-
-        //Información del usuario logueado
-        
-        $usuario_id = User::where('email', '=', 'maquina@gmail.com')->get();
-        $usuario_id = $usuario_id[0]->id;
-
-        $venta = Ventas::create([
-            'producto_id'   => $producto->id,
-            'usuario_id'    => $usuario_id,
-            'costo'         => $preciofinal,
-            'cantidad'      => $request->input('cantidad')
-        ]);
-
-        if(isset($venta->id))
-        {
-            $producto->stock = $producto->stock - $request->input('cantidad');
-            $producto->save();
-        }
-
-        $data = [
-            'nro_venta' => $venta->id,
-            'code'      => 200,
-            'usuario_id'=> $usuario_id,
-            'costo'     => $preciofinal,
-            'cantidad'  => $request->input('cantidad')
-        ];
-
-        return response()->json($data, $data['code']);
-
-    }
 
     public function AllVentas()
     {
-     
        //Instaciamos Modelos o clase
         $ventas = new Ventas();
-
-        //$ventas =  $ventas->AllVentas(); Cuidado
-
         //Retornamos el método
         return view('Ventas/AllVentas',[
             'ventas' => $ventas->AllVentas(),
@@ -204,20 +198,5 @@ class VentasController extends Controller
 
     }
 
-    public function productosAgrupados()
-    {
-        $productos =  DB::table('ventas')
-            ->join('productos', 'productos.id', '=', 'ventas.producto_id')
-            ->select('nombre', 'cantidad')
-            ->groupBy('productos.id', 'nombre', 'cantidad')
-            ->get();
-
-        /*$productos2 = DB::select("SELECT 'productos.nombre' ,'sum(ventas.cantidad)' FROM 'ventas' 
-                        INNER JOIN 'productos' where 'productos.id' = 'ventas.producto_id' 
-                        group by 'producto_id' ");*/
-                    
-
-
-        var_dump($productos); die();
-    }
+   
 }

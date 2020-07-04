@@ -3,27 +3,11 @@
 @section('title', 'Ventas')
 
 @section('content_header')
-    <h1 class="m-0 text-dark">Inventario de Máquinas</h1>
-    <hr>
+    <h1 class="m-0 text-dark">Máquinas disponibles</h1>
+    <span>En estas máquinas su producto está disponible, seleccione la de su preferencia</span>
 @stop
 
 @section('content')
-
-<div class="container-fluid">
-    <form action="#" method="POST" enctype="multipart/form-data">
-        <div class="form-group">
-            <select name="zona" class="form-control">
-                <option name="#">Misiones</option>
-                <option name="#">Centro</option>
-                <option name="#">Sur</option>
-            </select>
-
-
-        </div>
-        <input type="submit" class="btn btn-primary btn-block" value="Filtrar">
-    </form>
-
-</div>
 
 <hr>
 <br>
@@ -45,7 +29,7 @@
             <td>{{$maquina->ubicacion}}</td>
 
          <td>
-          <a href="{{route('maquinas.detalle',$maquina->id)}}" class="btn btn-success">Stock</a>
+            <a href="{{route('ventas.elegir',['maquina_id' => $maquina->id, 'producto_id' => $producto_id])}}" class="btn btn-success">Comprar</a>
          </td>
            
         </tr>

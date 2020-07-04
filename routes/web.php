@@ -32,8 +32,8 @@ Route::get('/producto/imagen/{file}', 'ProductosController@getImagen')->name('im
 
 
 //Ventas
-Route::get('/ventas/venta/{id}', 'VentasController@ventas_vista')->name('ventas_vista'); //Dirije al formulario 
-Route::post('/ventas/proceso/{id}', 'VentasController@ventas')->name('ventas'); //Procesa en la base de datos
+Route::get('/ventas/venta/{producto_id}', 'VentasController@ventas_vista')->name('ventas_vista'); //Dirije al formulario 
+Route::post('/ventas/proceso/{maquina_id}/{producto_id}', 'VentasController@ventas')->name('ventas'); //Procesa en la base de datos
 Route::post('/ventas/maquina/{id}', 'VentasController@ventasMaquina')->name('ventas.maquina'); //Procesa en la base de datos
 Route::get('/ventas/allventas', 'VentasController@AllVentas')->name('AllVentas'); //Dirije al formulario 
 Route::get('/ventas/allventas_excel', 'VentasController@AllVentas_excel')->name('AllVentas_excel'); //Descarga el archivo
@@ -41,9 +41,13 @@ Route::get('/ventas/grafico', 'VentasController@graficos')->name('grafico'); //D
 Route::get('/ventas/agrupado', 'VentasController@productosAgrupados')->name('agrupados'); //Descarga el archivo
 Route::get('/ventas/compras', 'VentasController@MisCompras')->name('ventas.compras'); 
 Route::get('/ventas/detalle/{id}', 'VentasController@Detalle')->name('ventas.detalle'); 
+Route::get('/ventas/elegir/{maquina_id}/{producto_id}', 'VentasController@elegir')->name('ventas.elegir'); 
+
 
 //Inventario de máquinas (Stock y máquinas)
 Route::get('/stock/maquinas', 'MaquinasController@AllMaquinas')->name('maquinas.todas'); 
+Route::get('/stock/detalle/{id}', 'MaquinasController@detalle')->name('maquinas.detalle'); 
+
 
 
 

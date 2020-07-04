@@ -14,7 +14,7 @@
                 <h2>Producto a vender: {{$producto->nombre}}</h2>
             </div>
             <div class="card-body">
-                <form action="{{route('ventas', $producto->id)}}" method="POST">
+                <form action="{{route('ventas', [ 'producto_id' => $producto->id, 'maquina_id' => $maquina_id])}}" method="POST">
                     @csrf
 
                     <div class="form-group">
@@ -47,7 +47,7 @@
                             name="cantidad" 
                             class="form-control" 
                             min="1"
-                            max="{{$producto->stock}}"
+                            
                             
                         >
                     </div>
