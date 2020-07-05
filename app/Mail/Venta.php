@@ -30,7 +30,7 @@ class Venta extends Mailable
      */
     public function build()
     {
-        return $this->subject('hola')->view('email.Venta',$this->detalles)
+        return $this->subject('Granel.store')->view('email.Venta',['detalles' => $this->detalles])
                             ->attach(storage_path('app/public/') .'archivo'.$this->detalles['id'].'.pdf');
     }
 }

@@ -18,9 +18,9 @@
 <body>
     <h1>{{$detalles['title']}}</h1>
     <p>{{$detalles['body']}}</p>
-    <p><div class="title m-b-md">
-        {!! QrCode::size(50)->generate("Estas aprobado bro") !!}
-    </div></p>
+    <p>{{$detalles['datos']}}</p>
+
+    
     <p>Gracias</p>
 </body>
     

@@ -14,11 +14,10 @@
 </head>
 <body>
     
-   
-        <div class="title m-b-md">
-            {!!QrCode::size(300)->generate("www.nigmacode.com") !!}
-         </div>
-   
+        <p>¡Muchas gracias por realizar su compra con nosotros!</p><br>
+        <p>{{$pdf['body']}}</p><br>
+        <p>{{$pdf['datos']}}</p><br>
+
     <p>Gracias</p>
 </body>
     

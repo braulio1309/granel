@@ -58,13 +58,14 @@ class VentasController extends Controller
     {
         $producto = Productos::where('id', '=', $producto_id)->get();
         $producto = $producto[0];
-
         $preciofinal = $request->input('cantidad') * $producto->precio;
-        $maquina_id = $request->input('maquina_id');
+        //$maquina_id = $request->input('maquina_id');
         $stock = DB::table('stock')
             ->where('maquina_id','=', $maquina_id)
             ->where('producto_id', '=', $producto_id)
             ->get();
+       // var_dump($stock);die();
+
         $stock = $stock[0];
 
         if($stock->cantidad - $request->input('cantidad')<0){
@@ -80,16 +81,22 @@ class VentasController extends Controller
                 'cantidad'      => $request->input('cantidad')
             ]);
         }
-        
+
+        $pdf = [
+            'id'    => $venta->id,
+            'title' => 'Granel',
+            'body'  => 'Su compra ha sido exitosa, verifique los datos:',
+            'datos' => "Producto: $producto->nombre, Precio total: $preciofinal, Cantidad: $venta->cantidad",
+        ];
         $detalles = [
             'id'    => $venta->id,
             'title' => 'Granel',
             'body'  => 'Su compra ha sido exitosa, verifique los datos:',
             'datos' => "Producto: $producto->nombre, Precio total: $preciofinal, Cantidad: $venta->cantidad",
-            'pdf'   =>  \PDF::loadView('email.qr',$venta)->save(storage_path('app/public/') .'archivo'.$venta->id.'.pdf')
+            'pdf'   =>  \PDF::loadView('email.qr',['pdf' => $pdf])->save(storage_path('app/public/') .'archivo'.$venta->id.'.pdf')
         ];
        // cristianstanga@gmail.com
-       \Mail::to('brauliozapatad@gmail.com')->send(new \App\Mail\Venta($detalles));
+       \Mail::to($request->input('email'))->send(new \App\Mail\Venta($detalles));
        
 
         if(isset($venta->id))

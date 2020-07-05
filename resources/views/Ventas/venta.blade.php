@@ -18,6 +18,15 @@
                     @csrf
 
                     <div class="form-group">
+                        <label> Correo electronico  </label>
+                        <input 
+                            type="text" 
+                            name="email" 
+                            class="form-control" 
+                        >
+                    </div>
+
+                    <div class="form-group">
                         <label> Nombre </label>
                         
                         <input type="text" 

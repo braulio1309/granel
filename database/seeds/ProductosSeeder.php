@@ -17,6 +17,7 @@ class ProductosSeeder extends Seeder
             'nombre'        => 'Arroz',
             'precio'        => 300,
             'categoria_id'  => 1,
+            'imagen'        => 'Arroz.jpg'
             
         ]);
 
@@ -24,6 +25,8 @@ class ProductosSeeder extends Seeder
             'nombre'        => 'Poroto',
             'precio'        => 500,
             'categoria_id'  => 1,
+            'imagen'        => 'Poroto.jpg'
+
 
         ]);
     }
