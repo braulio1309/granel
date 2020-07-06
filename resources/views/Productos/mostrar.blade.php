@@ -27,7 +27,6 @@
       <div class="card">
           <div class="card-body">
             <div class="row">
-              @extends('adminlte::plugins')
             
             @foreach($productos as $producto)
             <div class="col-sm-4">

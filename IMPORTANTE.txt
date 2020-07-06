@@ -1,0 +1,32 @@
+Indicaciones para instalar el proyecto en local:
+
+Link del proyecto en el servidor público: http://granel.store/public/
+
+Les dejo el link de la documentación oficial de laravel en caso de tener alguna duda
+https://laravel.com/docs/7.x/installation
+
+1. Servidor local:
+Se debe tener un servidor local como wampserver o xampp con un php actualizado con una versión mínima de 7.1
+
+2. Instalar composer:
+Se necesita tener instalado composer en la máquina para poder bajar todas las librerías del proyecto
+link oficial: https://getcomposer.org/
+
+3. Github:
+Prosigue con clonar el archivo de laravel con el link otorgado con el siguiente comando
+git clone <url del git>
+
+4. Instalar dependencias:
+Ahora deben bajar las librerías usadas en el proyecto con el siguiente comando
+composer install y composer update
+
+5. Bajar migraciones:
+Las migraciones son los datos predefinidos en la base de datos para su mejor visualización, es decir, la carga inicial
+el comando a utilizar es el siguiente:
+php artisan migrate
+php artisan migrate:fresh --seed
+
+6. Final
+Vaya a su navegador y coloque la siguiente ruta:
+http://localhost/granel/public
+para visualizar el programa en local

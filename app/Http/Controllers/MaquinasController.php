@@ -35,7 +35,9 @@ class MaquinasController extends Controller
         $labels = collect();
         $valores = collect();
         $coloresFondo = collect();
+        
 
+        //$valores->push(["0", '10', '20']);
         $cont = 0;
         foreach ($registros as $registro) {
             $labels->push(["$registro->nombre"]);

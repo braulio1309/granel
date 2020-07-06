@@ -232,53 +232,62 @@ return [
 
     'menu' => [
         [
+            'rol' => '',
             'text' => 'search',
-            'search' => true,
-            'topnav' => true,
+            'search' => false,
+            'topnav' => false,
         ],
         [
+            'rol' => '',
             'text' => 'blog',
             'url'  => 'admin/blog',
             'can'  => 'manage-blog',
         ],
         [
+            'rol' => 'A',
             'text'        => 'Productos',
             'url'         => 'producto/mostrar',
             'icon'        => 'far fa-fw fa-file',
             'label'       => 2,
             'label_color' => 'success',
         ],
-        ['header' => 'Opciones'],
+        ['header' => 'Opciones', 'rol' => '',],
         [
+            'rol'   => 'C',
             'text' => 'Mis Compras',
             'url'  => 'ventas/compras',
             'icon' => 'fas fa-fw fa-user',
         ],
         [
+            'rol'   => 'A',
             'text' => 'Inventario',
             'url'  => 'stock/maquinas',
             'icon' => 'fas fa-fw fa-lock',
         ],
         [
+            'rol'      => 'A',
             'text'    => 'Reportes',
             'icon'    => 'fas fa-fw fa-share',
             'submenu' => [
                 [
+                    'rol' => 'A',
                     'text' => 'Máquinas',
                     'url'  => '#',
                 ],
                 [
+                    'rol' => 'A',
                     'text'    => 'Zonas',
                     'url'     => '#',
                     
                 ],
                 [
+                    'rol' => 'A',
                     'text' => 'Usuarios',
                     'url'  => '#',
                 ],
             ],
         ],
-        ['header' => 'labels'],
+        /*['header' => 'labels'],
         [
             'text'       => 'important',
             'icon_color' => 'red',
@@ -293,7 +302,7 @@ return [
             'text'       => 'information',
             'icon_color' => 'cyan',
             'url'        => '#',
-        ],
+        ],*/
     ],
 
     /*

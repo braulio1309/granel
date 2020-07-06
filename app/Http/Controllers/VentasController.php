@@ -124,7 +124,9 @@ class VentasController extends Controller
 
     public function MisCompras()
     {
-        $ventas = Ventas::where('usuario_id', '=',Auth::user()->id)->get();
+        $ventas = Ventas::
+        join('productos', 'productos.id', '=', 'ventas.producto_id')
+        ->where('usuario_id', '=',Auth::user()->id)->get();
         $user = [
             'idAction' => 1,
             'idProducto' => 1,

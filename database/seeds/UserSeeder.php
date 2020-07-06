@@ -24,19 +24,13 @@ class UserSeeder extends Seeder
         ]);
 
         DB::table('users')->insert([
-            'name'      => 'Braulio',
-            'email'     => 'brauliozapatad@gmail.com',
-            'password'  =>  Hash::make('pepipepi'),
+            'name'      => 'Cliente',
+            'email'     => 'cliente@gmail.com',
+            'password'  =>  Hash::make('1234'),
             'provincia' => 'Buenos Aires',
             'role'      => 'A' //admin
         ]);
 
-        DB::table('users')->insert([
-            'name'      => 'prueba',
-            'email'     => '@gmail.com',
-            'password'  =>  Hash::make('pepipepi'),
-            'provincia' => 'Buenos Aires',
-            'role'      => 'C' //cliente
-        ]);
+        
     }
 }
